@@ -55,3 +55,56 @@ function getLocalStorage(){
 }
 
 window.addEventListener('load', getLocalStorage);
+
+// __________________________________SLIDE________________________________________________
+
+let randomNum = getRandomNum();
+const slidePrev = document.querySelector('.slide-prev');
+const slideNext = document.querySelector('.slide-next');
+
+function getRandomNum(){
+    return 1 + Math.floor(Math.random() * 20);
+}
+
+function setBg(){
+    const timeOfDay = getTimeOfDay();
+    const bgNum = String(randomNum).length == 2 ? `${randomNum}` : `0${randomNum}`;
+    const link = `https://raw.githubusercontent.com/ValeriaYan/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg`;
+
+    const img = new Image();
+    img.src = link;
+
+    img.onload = () => {
+        document.body.style.backgroundImage = `url(${link})`;
+    }
+}
+
+setBg();
+
+function getSlideNext(){
+    if(randomNum == 20){
+        randomNum = 1;
+    }else{
+        randomNum++;
+    }
+}
+
+function getSlidePrev(){
+    if(randomNum == 1){
+        randomNum = 20;
+    }else{
+        randomNum--;
+    }
+}
+
+slidePrev.addEventListener('click', function(){
+    getSlidePrev();
+    setBg();
+    console.log(randomNum);
+})
+
+slideNext.addEventListener('click', function(){
+    getSlideNext();
+    setBg();
+    console.log(randomNum);
+})
