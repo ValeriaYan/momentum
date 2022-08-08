@@ -108,3 +108,60 @@ slideNext.addEventListener('click', function(){
     setBg();
     console.log(randomNum);
 })
+
+
+// ________________________________________PLAYER____________________________________________
+import playList from './playList.js';
+const playBtn = document.querySelector('.play');
+const next = document.querySelector('.play-next');
+const prev = document.querySelector('.play-prev');
+const audio = new Audio();
+let isPlay = false;
+let playNum = 0;
+
+function playAudio(){
+    audio.src = playList[playNum].src;
+    audio.currentTime = 0;
+    if(!isPlay){
+        audio.play();
+        isPlay = true;
+    }else{
+        audio.pause();
+        isPlay = false;
+    }
+
+    toggleBtn();
+    console.log(isPlay);
+}
+
+function toggleBtn(){
+    if(!isPlay){
+        playBtn.classList.remove('pause');
+    }else{
+        playBtn.classList.add('pause');
+    }
+}
+
+playBtn.addEventListener('click', playAudio);
+
+function playNext(){
+    if(playNum == 3){
+        playNum = -1;
+    }
+    playNum++;
+    isPlay = false;
+    playAudio();
+}
+
+function playPrev(){
+    if(playNum == 0){
+        playNum = 4;
+    }
+    playNum--;
+    isPlay = false;
+    playAudio();
+}
+
+next.addEventListener('click', playNext);
+prev.addEventListener('click', playPrev);
+
