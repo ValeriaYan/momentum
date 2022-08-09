@@ -104,9 +104,23 @@ import playList from './playList.js';
 const playBtn = document.querySelector('.play');
 const next = document.querySelector('.play-next');
 const prev = document.querySelector('.play-prev');
+const list = document.querySelector('.play-list');
 const audio = new Audio();
 let isPlay = false;
 let playNum = 0;
+
+function createPlayList(){
+    for(let song of playList){
+        let newElem = document.createElement('li');
+        newElem.classList.add('play-item');
+        newElem.textContent = song.title;
+        list.append(newElem);
+    }
+}
+
+createPlayList();
+const items = document.querySelectorAll('.play-item');
+
 
 function playAudio(){
     audio.src = playList[playNum].src;
@@ -118,9 +132,18 @@ function playAudio(){
         audio.pause();
         isPlay = false;
     }
-
+    
     toggleBtn();
-    console.log(isPlay);
+    markPlayingSong();
+}
+
+function markPlayingSong(){
+    items[playNum].classList.add('item-active');
+    for(let i = 0; i < items.length; i++){
+        if(i !== playNum){
+            items[i].classList.remove('item-active');
+        }
+    }
 }
 
 function toggleBtn(){
@@ -134,7 +157,7 @@ function toggleBtn(){
 playBtn.addEventListener('click', playAudio);
 
 function playNext(){
-    if(playNum == 3){
+    if(playNum == (playList.length - 1)){
         playNum = -1;
     }
     playNum++;
@@ -144,7 +167,7 @@ function playNext(){
 
 function playPrev(){
     if(playNum == 0){
-        playNum = 4;
+        playNum = playList.length;
     }
     playNum--;
     isPlay = false;
@@ -153,6 +176,7 @@ function playPrev(){
 
 next.addEventListener('click', playNext);
 prev.addEventListener('click', playPrev);
+
 
 // ____________________________________________________WEATHER________________________________________________
 
