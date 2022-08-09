@@ -43,18 +43,6 @@ function showGreeting(){
     greeting.textContent = `Good ${getTimeOfDay()},`;
 }
 
-function setLocalStorage(){
-    localStorage.setItem('name', n.value);
-}
-window.addEventListener('beforeunload', setLocalStorage);
-
-function getLocalStorage(){
-    if('name' in localStorage){
-        n.value = localStorage.getItem('name');    
-    }
-}
-
-window.addEventListener('load', getLocalStorage);
 
 // __________________________________SLIDE________________________________________________
 
@@ -111,6 +99,7 @@ slideNext.addEventListener('click', function(){
 
 
 // ________________________________________PLAYER____________________________________________
+
 import playList from './playList.js';
 const playBtn = document.querySelector('.play');
 const next = document.querySelector('.play-next');
@@ -165,3 +154,58 @@ function playPrev(){
 next.addEventListener('click', playNext);
 prev.addEventListener('click', playPrev);
 
+// ____________________________________________________WEATHER________________________________________________
+
+const weatherIcon = document.querySelector('.weather-icon');
+const temperature = document.querySelector('.temperature');
+const weatherDescription = document.querySelector('.weather-description');
+const wind = document.querySelector('.wind');
+const humidity = document.querySelector('.humidity');
+const city = document.querySelector('.city');
+city.value = localStorage.getItem('city');
+const weatherError = document.querySelector('.weather-error');
+
+city.addEventListener('change', getWeather);
+
+async function getWeather(){
+    city.value = city.value.trim();
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.value}&lang=en&appid=3165e81390d2540d9a839afd0b04ac9f&units=metric`;
+    
+    const res = await fetch(url);
+    const data = await res.json();
+
+    weatherIcon.className = 'weather-icon owf';
+    if('message' in data || city.value == ''){
+        weatherError.textContent = `Error! City not found`;
+        temperature.textContent = ``;
+        weatherDescription.textContent = ``;
+        wind.textContent = ``;
+        humidity.textContent = ``;
+    }else{
+        weatherError.textContent = ``;
+        weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+        temperature.textContent = `${Math.floor(data.main.temp)}°C`;
+        weatherDescription.textContent = `${data.weather[0].description}`;
+        wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
+        humidity.textContent = `Humidity: ${data.main.humidity}%`;
+    }
+}
+
+getWeather();
+
+// ____________________________________________________LOCAL_STORAGE____________________________________________
+
+function setLocalStorage(){
+    localStorage.setItem('name', n.value);
+    localStorage.setItem('city', city.value);
+}
+window.addEventListener('beforeunload', setLocalStorage);
+
+function getLocalStorage(){
+    if('name' in localStorage){
+        n.value = localStorage.getItem('name');    
+    }
+}
+
+window.addEventListener('load', getLocalStorage);
