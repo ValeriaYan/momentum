@@ -194,6 +194,28 @@ async function getWeather(){
 
 getWeather();
 
+// ___________________________________________________QUOTES____________________________________________________
+
+const quote = document.querySelector('.quote');
+const author = document.querySelector('.author');
+const changeQuote = document.querySelector('.change-quote');
+
+function randomNumQuote(){
+    return Math.floor(Math.random() * 100);
+}
+
+async function getQuote(){
+    const res = await fetch(`../assets/quotes.json`);
+    const data = await res.json();
+    const num = randomNumQuote();
+
+    quote.textContent = `"${data[num].text}"`;
+    author.textContent = data[num].author;
+}
+getQuote();
+
+changeQuote.addEventListener('click', getQuote);
+
 // ____________________________________________________LOCAL_STORAGE____________________________________________
 
 function setLocalStorage(){
