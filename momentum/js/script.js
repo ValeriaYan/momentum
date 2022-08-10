@@ -54,11 +54,11 @@ function getRandomNum(){
     return 1 + Math.floor(Math.random() * 20);
 }
 
-function setBg(){
-    const timeOfDay = getTimeOfDay();
-    const bgNum = String(randomNum).length == 2 ? `${randomNum}` : `0${randomNum}`;
-    const link = `https://raw.githubusercontent.com/ValeriaYan/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg`;
 
+async function setBg(){
+    let link = '';
+    // await getLinkToImageFlickr().then(str => link = str);
+    link = getLinkToImageGH();
     const img = new Image();
     img.src = link;
 
@@ -88,14 +88,38 @@ function getSlidePrev(){
 slidePrev.addEventListener('click', function(){
     getSlidePrev();
     setBg();
-    console.log(randomNum);
 })
 
 slideNext.addEventListener('click', function(){
     getSlideNext();
     setBg();
-    console.log(randomNum);
 })
+
+// ___________________________________PHOTO-SOURCE_________________________________________
+
+function getLinkToImageGH(){
+    const timeOfDay = getTimeOfDay();
+    const bgNum = String(randomNum).length == 2 ? `${randomNum}` : `0${randomNum}`;
+    return `https://raw.githubusercontent.com/ValeriaYan/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg`;
+}
+
+async function getLinkToImageUnsplash(){
+    const timeOfDay = getTimeOfDay();
+    const url = `https://api.unsplash.com/photos/random?orientation=landscape&query=${timeOfDay}&client_id=9KmeuUBFkvdIrg4bKEhVPxU9NCrOvSdCOiJhDGnY72g`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.urls.regular;
+}
+
+async function getLinkToImageFlickr(){
+    const timeOfDay = getTimeOfDay();
+    const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=9fc685eec8b55355bb9f700e914e1ee1&tags=${timeOfDay}&extras=url_l&format=json&nojsoncallback=1`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.photos.photo[randomNum].url_l;
+}
 
 
 // ________________________________________PLAYER____________________________________________
