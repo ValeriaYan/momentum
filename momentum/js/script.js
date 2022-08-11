@@ -264,6 +264,49 @@ getQuote();
 
 changeQuote.addEventListener('click', getQuote);
 
+// ____________________________________________________SETTING_______________________________________________
+
+const settingBtn = document.querySelector('.setting');
+const setting = document.querySelector('.setting-content');
+const listLanguage = document.querySelector('.list-language');
+const listSource = document.querySelector('.list-source');
+const itemLanguage = document.querySelectorAll('.list-language > .line-item');
+const itemSource = document.querySelectorAll('.list-source > .line-item');
+
+settingBtn.addEventListener('click', function(){
+    settingBtn.classList.toggle('_active');
+})
+
+document.addEventListener('click', function(event){
+    const isSetting = event.target == setting || setting.contains(event.target) || settingBtn.contains(event.target) || event.target == settingBtn;
+    if(!isSetting){
+        settingBtn.classList.remove('_active');
+    }
+})
+
+listLanguage.addEventListener('click', function(event){
+    if(event.target.tagName == 'LI' && !event.target.classList.contains('default')){
+        console.log(event.target.classList.contains('default'));
+        console.log(event.target)
+        for(let item of itemLanguage){
+            item.classList.remove('_active')
+        }
+        event.target.classList.add('_active');
+        itemLanguage[0].textContent = event.target.textContent;
+    }
+})
+
+listSource.addEventListener('click', function(event){
+    if(event.target.tagName == 'LI' && !event.target.classList.contains('default')){
+        for(let item of itemSource){
+            item.classList.remove('_active')
+        }
+        event.target.classList.add('_active');
+        itemSource[0].textContent = event.target.textContent;
+    }
+})
+
+
 // ____________________________________________________LOCAL_STORAGE____________________________________________
 
 function setLocalStorage(){

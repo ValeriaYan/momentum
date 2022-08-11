@@ -242,13 +242,183 @@ body {
 
 .footer {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 30vh;
   min-height: 160px;  
   padding: 20px;
+}
+
+
+/*_____________________________________________________ SETTINGS______________________________________________ */
+
+.setting {
+  align-self: flex-end;
+}
+
+.setting._active > .setting-icon svg{
+  transition: all ease 0.3s;
+  transform: scale(1.2) rotate(45deg);
+  fill: #fff;
+}
+
+.setting-icon {
+  cursor: pointer;
+}
+
+.setting-icon svg{
+  height: 20px;
+  width: 20px;
+  fill: rgb(201, 201, 201);
+  transition: all ease 0.3s;
+}
+
+.setting-content {
+  visibility: hidden;
+  opacity: 0;
+  overflow-y: auto;
+  
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  height: 500px;
+  width: 300px;
+  padding: 15px;
+  
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  transition: all ease-in 0.1s;
+}
+.setting-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.setting-content::-webkit-scrollbar-thumb {
+  background-color: rgb(65, 65, 65);
+}
+
+.setting._active + .setting-content {
+  visibility: visible;
+  opacity: 1;
+  transition: all ease-in 0.1s;
+}
+
+.setting-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.line {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  padding: 10px 0;
+  line-height: 38px;
+}
+
+.line-name {
+}
+
+.line-list {
+  position: absolute;
+  right: 0;
+  height: 38px;
+  z-index: 3;
+  overflow: hidden;
+  
+  background-color: rgb(128, 128, 128);
+  border-radius: 5px;
+  list-style: none;
+
+  transition: all ease 0.1s;
+}
+
+.line-list-3 {
+  z-index: 4;
+}
+
+.line-list-3:hover {
+  height: 114px;
+}
+
+.line-list-4:hover {
+  height: 152px;
+}
+
+.line-list:hover .line-item:first-child::after {
+  transform: rotate(180deg);
+}
+
+.line-item:first-child::after{
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 7px;
+  width: 15px;
+  height: 15px;
+  background-image: url('../assets/svg/arrow.svg');
+  transform: rotate(0deg);
+  transition: all ease 0.1s;
+}
+
+.line-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10px;
+  padding-right: 25px;
+  cursor: pointer;
+}
+
+.line-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.line-input {
+  appearance: none;
+}
+
+.line-box {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 0;
+  width: 40px;
+  height: 20px;
+  border-radius: 80px;
+  background-color: rgb(82, 82, 82);
+  cursor: pointer;
+  transition: all ease 0.1s;
+}
+
+.line-input:checked ~ .line-box{
+  background-color: rgb(0, 184, 55);
+}
+
+.line-box i {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  background-color: rgb(128, 128, 128);
+  border-radius: 50%;
+  transition: all ease 0.1s;
+}
+
+.line-input:checked ~ .line-box i{
+  left: 55%;
+  background-color: #fff;
+  width: 15px;
+  height: 15px;
+}
+
+.quote-content{
+  
 }
 
 .change-quote {
