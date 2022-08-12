@@ -12,11 +12,54 @@ let state = {
     }
 }
 
+const dictionaryEn = {
+    'Good morning,': 'Доброе утро,',
+    'Good afternoon,': 'Добрый день,',
+    'Good evening,': 'Добрый вечер,',
+    'Good night,': 'Доброй ночи,',
+    '[Enter name]': '[Введите имя]',
+
+    'Settings': 'Настройки',
+    'Language': 'Язык',
+    'Russian': 'Русский',
+    'English': 'Английский',
+    'Photo source': 'Источник фото',
+    'Tags': 'Теги',
+    'Time': 'Время',
+    'Date': 'Дата',
+    'Greeting': 'Приветствие',
+    'Quote': 'Цитата',
+    'Weather': 'Погода',
+    'Audio': 'Плеер',
+}
+
+const dictionaryRu =  {
+    'Доброе утро,': 'Good morning,',
+    'Добрый день,': 'Good afternoon,',
+    'Добрый вечер,': 'Good evening,',
+    'Доброй ночи,': 'Good night,',
+    '[Введите имя]': '[Enter name]',
+
+    'Настройки': 'Settings',
+    'Язык': 'Language',
+    'Русский': 'Russian',
+    'Английский': 'English',
+    'Источник фото': 'Photo source',
+    'Теги': 'Tags',
+    'Время': 'Time',
+    'Дата': 'Date',
+    'Приветствие': 'Greeting',
+    'Цитата': 'Quote',
+    'Погода': 'Weather',
+    'Плеер': 'Audio',
+}
+
 
 const time = document.querySelector('.time');
 const date = document.querySelector('.date');
 const greeting = document.querySelector('.greeting-text');
 const n = document.querySelector('.name');
+n.value = localStorage.getItem('name');
 
 function showTime(){
     const date = new Date();
@@ -30,7 +73,7 @@ function showTime(){
 function showDate(){
     const d = new Date();
     const options = {weekday: 'long', month: 'long', day: 'numeric'};
-    const currentDate = d.toLocaleDateString('en-EN', options);
+    const currentDate = d.toLocaleDateString(`${state.language}`, options);
     date.textContent = `${currentDate}`
 }
 
@@ -55,7 +98,15 @@ function getTimeOfDay(){
 }
 
 function showGreeting(){
-    greeting.textContent = `Good ${getTimeOfDay()},`;
+    let text = `Good ${getTimeOfDay()},`
+    if(state.language == 'en'){
+        greeting.textContent = text;
+    }
+    if(state.language == 'ru'){
+        if(dictionaryEn[greeting.textContent] !== undefined){
+            greeting.textContent = dictionaryEn[greeting.textContent];
+        }
+    }
 }
 
 
@@ -100,7 +151,12 @@ async function setBg(nameSource){
         enableTags();
     }
     if(nameSource == 'Unsplash API'){
-        await getLinkToImageUnsplash().then(str => link = str);
+        try{
+            await getLinkToImageUnsplash().then(str => link = str);
+        }catch(err){
+            console.log(err)
+            await getLinkToImageFlickr().then(str => link = str);
+        }
         enableTags();
     }
     const img = new Image();
@@ -288,13 +344,7 @@ async function getWeather(){
         weatherIcon.classList.add(`owf-${data.weather[0].id}`);
         temperature.textContent = `${Math.floor(data.main.temp)}°C`;
         weatherDescription.textContent = `${data.weather[0].description}`;
-        if(state.language == 'en'){
-            wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
-            humidity.textContent = `Humidity: ${data.main.humidity}%`;
-        }else if(state.language == 'ru'){
-            wind.textContent = `Скорость ветра: ${Math.floor(data.wind.speed)} m/s`;
-            humidity.textContent = `Влажность воздуха: ${data.main.humidity}%`;
-        }
+        setLanguageWeather(data);
     }
 }
 
@@ -311,7 +361,12 @@ function randomNumQuote(){
 }
 
 async function getQuote(){
-    const res = await fetch(`../assets/quotes.json`);
+    let res;
+    if(state.language == 'en'){
+        res = await fetch(`../assets/quotes.json`);
+    }else if(state.language == 'ru'){
+        res = await fetch(`../assets/quotesRU.json`);
+    }
     const data = await res.json();
     const num = randomNumQuote();
 
@@ -416,9 +471,6 @@ setting.addEventListener('click', function(event){
     }
 })
 
-function changeLanguage(){
-    getWeather();
-}
 
 function setSettings(){
     if(localStorage.getItem(state)){
@@ -449,6 +501,90 @@ function setSettings(){
 
 setSettings();
 
+// ___________________________________________________LANGUAGE__________________________________________________
+
+function setLanguageWeather(data){
+    if(state.language == 'en'){
+        wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
+        humidity.textContent = `Humidity: ${data.main.humidity}%`;
+    }else if(state.language == 'ru'){
+        wind.textContent = `Скорость ветра: ${Math.floor(data.wind.speed)} m/s`;
+        humidity.textContent = `Влажность воздуха: ${data.main.humidity}%`;
+    }
+}
+
+function changeLanguageSettingTitle(){
+    const settingTitle = document.querySelector('.setting-title');
+    if(state.language == 'ru'){
+        if(dictionaryEn[settingTitle.textContent] !== undefined){
+            settingTitle.textContent = dictionaryEn[settingTitle.textContent];
+        }
+    }else if(state.language == 'en'){
+        if(dictionaryRu[settingTitle.textContent] !== undefined){
+            settingTitle.textContent = dictionaryRu[settingTitle.textContent];
+        }
+    }
+}
+
+function changeLanguageLineNames(){
+    const lineNames = document.querySelectorAll('.line-name');
+    if(state.language == 'ru'){
+        for(let line of lineNames){
+            if(dictionaryEn[line.textContent] !== undefined){
+                line.textContent = dictionaryEn[line.textContent];
+            }
+        }
+    }else if(state.language == 'en'){
+        for(let line of lineNames){
+            if(dictionaryRu[line.textContent] !== undefined){
+                line.textContent = dictionaryRu[line.textContent];
+            }
+        }
+    }
+}
+
+function changeLanguagePlaceholder(){
+    const greetingText = document.querySelector('.greeting > .name');
+    if(state.language == 'en'){
+        if(dictionaryRu[greetingText.placeholder] !== undefined){
+            greetingText.placeholder = dictionaryRu[greetingText.placeholder];
+        }
+    }
+    if(state.language == 'ru'){
+        if(dictionaryEn[greetingText.placeholder] !== undefined){
+            greetingText.placeholder = dictionaryEn[greetingText.placeholder];
+        }
+    }
+}
+
+
+function changeLanguage(){
+    getWeather();
+    getQuote();
+    showDate();
+    showGreeting();
+    changeLanguageSettingTitle();
+    changeLanguageLineNames();
+    changeLanguagePlaceholder()
+
+    const listLanguage = document.querySelectorAll('.list-language > .line-item');
+
+    if(state.language == 'ru'){
+        for(let item of listLanguage){
+            if(dictionaryEn[item.textContent] !== undefined){
+                item.textContent = dictionaryEn[item.textContent];
+            }
+        }
+    }else if(state.language == 'en'){
+        for(let item of listLanguage){
+            if(dictionaryRu[item.textContent] !== undefined){
+                item.textContent = dictionaryRu[item.textContent];
+            }
+        }
+    }
+}
+
+
 // ____________________________________________________LOCAL_STORAGE____________________________________________
 
 function setLocalStorage(){
@@ -459,10 +595,9 @@ function setLocalStorage(){
 }
 window.addEventListener('beforeunload', setLocalStorage);
 
-function getLocalStorage(){
-    if('name' in localStorage){
-        n.value = localStorage.getItem('name');    
+function getLocalStorage() {
+    if(localStorage.getItem('name')) {
+      n.value = localStorage.getItem('name');
     }
-}
-
-window.addEventListener('load', getLocalStorage);
+  }
+  window.addEventListener('load', getLocalStorage)
