@@ -124,7 +124,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   row-gap: 5px;
-  width: 180px;
+  width: 200px;
   min-height: 180px;  
   text-align: left;
 }
@@ -207,7 +207,7 @@ body {
   margin-bottom: 20px;
 }
 
-.greeting-container {
+.greeting {
   display: flex;
   flex-wrap: wrap;
   justify-content: stretch;
@@ -217,7 +217,7 @@ body {
   font-size: 40px;
 }
 
-.greeting {
+.greeting-text {
   flex: 1;  
   padding: 10px;
   text-align: right;
@@ -298,6 +298,7 @@ body {
 
 .setting-content::-webkit-scrollbar-thumb {
   background-color: rgb(65, 65, 65);
+  border-radius: 10px;
 }
 
 .setting._active + .setting-content {
@@ -377,6 +378,17 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.line-tags {
+  padding: 0 10px;
+  border: none;
+  outline: none;
+
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
 .line-input {
   appearance: none;
 }
@@ -390,8 +402,8 @@ body {
   height: 20px;
   border-radius: 80px;
   background-color: rgb(82, 82, 82);
-  cursor: pointer;
   transition: all ease 0.1s;
+  pointer-events: none;
 }
 
 .line-input:checked ~ .line-box{
@@ -408,6 +420,7 @@ body {
   background-color: rgb(128, 128, 128);
   border-radius: 50%;
   transition: all ease 0.1s;
+  pointer-events: none;
 }
 
 .line-input:checked ~ .line-box i{
@@ -417,16 +430,16 @@ body {
   height: 15px;
 }
 
-.quote-content{
-  
-}
+.quote {
+  width: 100%;
+} 
 
 .change-quote {
   margin-bottom: 30px;
   background-image: url("../assets/svg/reload.svg");  
 }
 
-.quote {
+.quote-text {
   min-height: 32px;
 }
 
@@ -440,12 +453,12 @@ body {
     font-size: 72px;    
   }
 
-  .greeting-container {
+  .greeting {
     min-height: 40px;
     font-size: 32px;
   }
 
-  .greeting {
+  .greeting-text {
     padding: 5px;
   }
 

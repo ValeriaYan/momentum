@@ -37,8 +37,8 @@
     </div>
     <time class="time"></time>
     <date class="date"></date>
-    <div class="greeting-container">
-      <span class="greeting"></span>
+    <div class="greeting">
+      <span class="greeting-text"></span>
       <input type="text" class="name" placeholder="[Enter name]" value=''/>
     </div>
   </main>
@@ -69,8 +69,8 @@
         <div class="line-name">Language</div>
         <ul class="line-list line-list-3 list-language">
           <li class="line-item default">English</li>
-          <li class="line-item">English</li>
-          <li class="line-item">Russian</li>
+          <li class="line-item" data-name="en">English</li>
+          <li class="line-item" data-name="ru">Russian</li>
         </ul>
       </div>
       <div class="line">
@@ -82,60 +82,71 @@
           <li class="line-item">Unsplash API</li>
         </div>
       </div>
+      <div class="line">
+        <div class="line-name">Tags</div>
+        <input type="text" class="line-tags" value="">
+      </div>
       <label class="line">
         Time
-        <input type="checkbox" class="line-input"></input">
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="time" checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
       <label class="line">
         Date
-        <input type="checkbox" class="line-input"></input">
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="date"checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
       <label class="line">
         Greeting
-        <input type="checkbox" class="line-input"></input>
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="greeting"checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
       <label class="line">
         Quote
-        <input type="checkbox" class="line-input"></input>
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="quote"checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
       <label class="line">
         Weather
-        <input type="checkbox" class="line-input"></input>
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="weather"checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
       <label class="line">
         Audio
-        <input type="checkbox" class="line-input"></input>
-        <span class="line-box">
-          <i></i>
-        </span>
+        <input type="checkbox" class="line-input" name="player" checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
       </label>
-      <label class="line">
+      <!-- <label class="line">
         ToDo
-        <input type="checkbox" class="line-input"></input>
-        <span class="line-box">
-          <i></i>
-        </span>
-      </label>
+        <input type="checkbox" class="line-input" name="todo" checked>
+          <span class="line-box">
+            <i></i>
+          </span>
+        </input">
+      </label> -->
     </div>
-    <div class="quote-content">
+    <div class="quote">
       <button class="change-quote"></button>
       <div>
-        <div class="quote"></div>
+        <div class="quote-text"></div>
         <div class="author"></div>
       </div>
     </div>
