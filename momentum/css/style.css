@@ -254,6 +254,7 @@ body {
 /*_____________________________________________________ SETTINGS______________________________________________ */
 
 .setting {
+  position: relative;
   align-self: flex-end;
 }
 
@@ -341,11 +342,11 @@ body {
   z-index: 4;
 }
 
-.line-list-3:hover {
+.list-language:hover {
   height: 114px;
 }
 
-.line-list-4:hover {
+.list-source:hover {
   height: 152px;
 }
 
@@ -428,6 +429,23 @@ body {
   background-color: #fff;
   width: 15px;
   height: 15px;
+}
+
+.setting-error {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 15px;
+  left: 70px;
+
+  padding: 10px;
+
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  color: #f00;
+  border: 1px #f00 solid;
+
+  transition: all ease 0.5s;
 }
 
 .quote {

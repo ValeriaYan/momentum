@@ -154,8 +154,11 @@ async function setBg(nameSource){
         try{
             await getLinkToImageUnsplash().then(str => link = str);
         }catch(err){
-            console.log(err)
             await getLinkToImageFlickr().then(str => link = str);
+            showError(err);
+            const listSource = Array.from(document.querySelectorAll('.list-source > .line-item'));
+            let elemFlickr = listSource.find(elem => elem.textContent == 'Flickr API');
+            setActiveSource(elemFlickr);
         }
         enableTags();
     }
@@ -194,6 +197,8 @@ slideNext.addEventListener('click', function(){
     setBg(state.photoSource);
 })
 
+
+
 // ___________________________________PHOTO-SOURCE_________________________________________
 
 function getLinkToImageGH(){
@@ -210,6 +215,9 @@ async function getLinkToImageUnsplash(){
     const url = `https://api.unsplash.com/photos/random?orientation=landscape&query=${query}&client_id=9KmeuUBFkvdIrg4bKEhVPxU9NCrOvSdCOiJhDGnY72g`;
 
     const res = await fetch(url);
+    if(res.ok == false){
+        throw 'Photo limit exceeded (50)'
+    }
     const data = await res.json();
     return data.urls.regular;
 }
@@ -219,7 +227,7 @@ async function getLinkToImageFlickr(){
     if(tagsValue !== ''){
         query = tagsValue;
     }
-    const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=9fc685eec8b55355bb9f700e914e1ee1&tags=${query}&extras=url_l&format=json&nojsoncallback=1`;
+    const url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=9fc685eec8b55355bb9f700e914e1ee1&tags=${query}&extras=url_l&format=json&nojsoncallback=1&safe_search=1`;
 
     const res = await fetch(url);
     const data = await res.json();
@@ -383,8 +391,7 @@ const settingBtn = document.querySelector('.setting');
 const setting = document.querySelector('.setting-content');
 const listLanguage = document.querySelector('.list-language');
 const listSource = document.querySelector('.list-source');
-const itemLanguage = document.querySelectorAll('.list-language > .line-item');
-const itemSource = document.querySelectorAll('.list-source > .line-item');
+
 
 settingBtn.addEventListener('click', function(){
     settingBtn.classList.toggle('_active');
@@ -397,7 +404,8 @@ document.addEventListener('click', function(event){
     }
 })
 
-function setActiveLanguage(elem, itemsLanguage){
+function setActiveLanguage(elem){
+    const itemsLanguage = document.querySelectorAll('.list-language > .line-item');
     for(let item of itemsLanguage){
         item.classList.remove('_active')
     }
@@ -409,12 +417,13 @@ function setActiveLanguage(elem, itemsLanguage){
 
 listLanguage.addEventListener('click', function(event){
     if(event.target.tagName == 'LI' && !event.target.classList.contains('default')){
-        setActiveLanguage(event.target, itemLanguage);
+        setActiveLanguage(event.target);
     }
 })
 
 
-function setActiveSource(elem, itemsSource){
+function setActiveSource(elem){
+    const itemsSource = document.querySelectorAll('.list-source > .line-item');
     for(let item of itemsSource){
         item.classList.remove('_active')
     }
@@ -426,7 +435,7 @@ function setActiveSource(elem, itemsSource){
 
 listSource.addEventListener('click', function(event){
     if(event.target.tagName == 'LI' && !event.target.classList.contains('default')){
-        setActiveSource(event.target, itemSource);
+        setActiveSource(event.target);
     }
 })
 
@@ -484,7 +493,7 @@ function setSettings(){
             elemPhotoSource = listItemSource[i];
         }
     }
-    setActiveSource(elemPhotoSource, listItemSource);
+    setActiveSource(elemPhotoSource);
 
     let listItemLanguage = document.querySelectorAll('.list-language .line-item');
     let elemLanguage;
@@ -500,6 +509,20 @@ function setSettings(){
 }
 
 setSettings();
+
+function showError(err){
+    const error = document.querySelector('.setting-error');
+    error.textContent = err;
+
+    error.style.visibility = 'visible';
+    error.style.opacity = '1';
+
+    function hideError(){
+        error.style.visibility = 'hidden';
+        error.style.opacity = '0';
+    }
+    setTimeout(hideError, 3000);
+}
 
 // ___________________________________________________LANGUAGE__________________________________________________
 
