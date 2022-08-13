@@ -496,9 +496,9 @@ function randomNumQuote(){
 async function getQuote(){
     let res;
     if(state.language == 'en'){
-        res = await fetch(`./assets/quotes.json`);
+        res = await fetch(`assets/quotes.json`);
     }else if(state.language == 'ru'){
-        res = await fetch(`./assets/quotesRU.json`);
+        res = await fetch(`assets/quotesRU.json`);
     }
     const data = await res.json();
     const num = randomNumQuote();
