@@ -67,7 +67,6 @@ function showTime(){
     time.textContent = `${currentTime}`;
     showDate();
     showGreeting();
-    setInterval(showTime, 1000);
 }
 
 function showDate(){
@@ -77,7 +76,8 @@ function showDate(){
     date.textContent = `${currentDate}`
 }
 
-showTime();
+setInterval(showTime, 1000);
+
 
 function getTimeOfDay(){
     const date = new Date();
@@ -103,8 +103,8 @@ function showGreeting(){
         greeting.textContent = text;
     }
     if(state.language == 'ru'){
-        if(dictionaryEn[greeting.textContent] !== undefined){
-            greeting.textContent = dictionaryEn[greeting.textContent];
+        if(dictionaryEn[text] !== undefined){
+            greeting.textContent = dictionaryEn[text];
         }
     }
 }
@@ -242,26 +242,87 @@ const playBtn = document.querySelector('.play');
 const next = document.querySelector('.play-next');
 const prev = document.querySelector('.play-prev');
 const list = document.querySelector('.play-list');
+const timeline = document.querySelector('.timeline');
+const progress = document.querySelector('.progress');
+const duration = document.querySelector('.player-time-duration');
+const current = document.querySelector('.player-time-current');
+let songName = document.querySelector('.song-name');
+songName.textContent = playList[0].title;
 const audio = new Audio();
+
 let isPlay = false;
 let playNum = 0;
+audio.src = playList[playNum].src;
+
+
+function setNameSong(){
+    songName.textContent = playList[playNum].title;
+}
+
+function setCurrentTime(timecode){
+    const widthTimeline = getComputedStyle(timeline).width;
+    const timeSong = (timecode / parseInt(widthTimeline)) * audio.duration;
+    audio.currentTime = timeSong;
+    if(!isPlay){
+        audio.play();
+        isPlay = true;
+    }
+    toggleBtn();
+    fillProgressBar()
+}
+
+function fillProgressBar(){
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.style.width = `${progressPercent}%`;
+    if(progressPercent == 100){
+        playNext();
+    }
+}
+
+function setCurrentTimeAudio(){
+    const currentTime = Math.floor(audio.currentTime);
+    let min = String(Math.floor(currentTime / 60));
+    let sec = String(currentTime % 60);
+    if(sec.length == 1){
+        sec = `0${sec}`
+    }
+    current.textContent = `${min}:${sec}`;
+}
+
+
+audio.addEventListener('timeupdate', fillProgressBar);
+audio.addEventListener('timeupdate', setCurrentTimeAudio);
+
+timeline.addEventListener('click', function(event){
+    setCurrentTime(event.offsetX);
+})
 
 function createPlayList(){
     for(let song of playList){
         let newElem = document.createElement('li');
-        newElem.classList.add('play-item');
-        newElem.textContent = song.title;
+        newElem.classList.add('play-item-wrapper');
         list.append(newElem);
+
+        let item = document.createElement('div');
+        item.classList.add('play-item');
+        item.textContent = song.title;
+        newElem.append(item);
+
+        let icon = document.createElement('div');
+        icon.classList.add('play-item-icon');
+        newElem.append(icon);
+
     }
 }
 
 createPlayList();
 const items = document.querySelectorAll('.play-item');
+const itemsIcon = document.querySelectorAll('.play-item-icon');
 
 
 function playAudio(){
-    audio.src = playList[playNum].src;
-    audio.currentTime = 0;
+    duration.textContent = playList[playNum].duration;
+    setNameSong();
     if(!isPlay){
         audio.play();
         isPlay = true;
@@ -270,15 +331,17 @@ function playAudio(){
         isPlay = false;
     }
     
-    toggleBtn();
     markPlayingSong();
+    toggleBtn();
 }
 
 function markPlayingSong(){
     items[playNum].classList.add('item-active');
+    itemsIcon[playNum].classList.add('pause-item-icon');
     for(let i = 0; i < items.length; i++){
         if(i !== playNum){
             items[i].classList.remove('item-active');
+            itemsIcon[i].classList.remove('pause-item-icon');
         }
     }
 }
@@ -286,10 +349,28 @@ function markPlayingSong(){
 function toggleBtn(){
     if(!isPlay){
         playBtn.classList.remove('pause');
+        itemsIcon[playNum].classList.remove('pause-item-icon');
     }else{
         playBtn.classList.add('pause');
+        itemsIcon[playNum].classList.add('pause-item-icon');
     }
 }
+
+function setPlaySong(song){
+    const num = playList.findIndex(elem => elem.title == song.previousElementSibling.textContent);
+    if(playNum !== num){
+        isPlay = false;
+    }
+    playNum = num;
+    audio.src = playList[playNum].src;
+    playAudio();
+}
+
+list.addEventListener('click', function(event){
+    if(event.target.classList.contains('play-item-icon')){
+        setPlaySong(event.target);
+    }
+})
 
 playBtn.addEventListener('click', playAudio);
 
@@ -299,6 +380,8 @@ function playNext(){
     }
     playNum++;
     isPlay = false;
+    audio.src = playList[playNum].src;
+    audio.currentTime = 0;
     playAudio();
 }
 
@@ -308,11 +391,53 @@ function playPrev(){
     }
     playNum--;
     isPlay = false;
+    audio.src = playList[playNum].src;
+    audio.currentTime = 0;
     playAudio();
 }
 
 next.addEventListener('click', playNext);
 prev.addEventListener('click', playPrev);
+
+//________________________volume___________________________
+
+const volumeIcon = document.querySelector('.volume-icon');
+const volumeRange = document.querySelector('.volume-range');
+
+function offVolume(){
+    if(volumeIcon.classList.contains('volume-off')){
+        volumeIcon.classList.remove('volume-off');
+        volumeRange.value = '20';
+        setVolume();
+    }else{
+        volumeIcon.classList.add('volume-off');
+        volumeRange.value = '0';
+        setVolume();
+    }
+}
+
+function progressRange(){
+    const progress = volumeRange.value;
+    volumeRange.style.setProperty('--progress', `${progress}%`);
+}
+
+function changeIconVolume(){
+    if(volumeRange.value == '0'){
+        volumeIcon.classList.add('volume-off');
+    }else{
+        volumeIcon.classList.remove('volume-off');
+    }
+}
+
+function setVolume(){
+    audio.volume = (volumeRange.value / 100);
+    progressRange();
+    changeIconVolume();
+    console.log(audio.volume);
+}
+
+volumeRange.addEventListener('input', setVolume);
+volumeIcon.addEventListener('click', offVolume);
 
 
 // ____________________________________________________WEATHER________________________________________________
@@ -371,9 +496,9 @@ function randomNumQuote(){
 async function getQuote(){
     let res;
     if(state.language == 'en'){
-        res = await fetch(`../assets/quotes.json`);
+        res = await fetch(`./assets/quotes.json`);
     }else if(state.language == 'ru'){
-        res = await fetch(`../assets/quotesRU.json`);
+        res = await fetch(`./assets/quotesRU.json`);
     }
     const data = await res.json();
     const num = randomNumQuote();
@@ -524,7 +649,7 @@ function showError(err){
     setTimeout(hideError, 3000);
 }
 
-// ___________________________________________________LANGUAGE__________________________________________________
+// // ___________________________________________________LANGUAGE__________________________________________________
 
 function setLanguageWeather(data){
     if(state.language == 'en'){

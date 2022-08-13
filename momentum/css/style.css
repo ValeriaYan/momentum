@@ -31,16 +31,63 @@ body {
   padding: 20px;
 }
 
+.player {
+  width: 230px;
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.song-name {
+  text-align: left;
+}
+
 .player-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.player-time {
+  display: flex;
+  align-items: flex-end;
+}
+
+.player-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 120px;
-  margin-bottom: 28px;
+}
+
+.timeline {
+  width: 100%;
+  height: 4px;
+  background-color: rgb(138, 138, 138);
+  border-radius: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.progress {
+  height: 100%;
+  background-color: #fff;
+  pointer-events: none;
+  border-radius: 10px;
 }
 
 .play-list {
   text-align: left;
+}
+
+.play-item-wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 
 .play-item {
@@ -51,6 +98,7 @@ body {
   opacity: .8;
   cursor: pointer;
   transition: .3s;
+  line-height: 23px;
 }
 
 .play-item:hover {
@@ -64,6 +112,23 @@ body {
   top: 2px;
   font-weight: 900;
 }
+
+.play-item-icon{
+  width: 25px;
+  height: 25px;
+  background: url('../assets/svg/play-song.svg');
+  transition: all ease 0.1s;
+  cursor: pointer;
+}
+
+.pause-item-icon {
+  width: 25px;
+  height: 25px;
+  background-image:  url('../assets/svg/pause-song.svg');
+  transition: all ease 0.1s;
+  cursor: pointer;
+}
+
 
 .item-active::before {
   color: #C5B358;
@@ -116,6 +181,47 @@ body {
 
 .play-next {
   background-image: url("../assets/svg/play-next.svg");
+}
+
+.player-volume {
+  display: flex;
+  align-items: center;
+}
+
+.volume-icon {
+  width: 25px;
+  height: 25px;
+  background-image: url('../assets/svg/soundon.svg');
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.volume-icon.volume-off {
+  background-image: url('../assets/svg/soundoff.svg');;
+}
+
+:root {
+  --progress: 50%
+}
+.volume-range {
+  appearance: none;
+  width: 50px;
+  height: 4px;
+
+  border: #8a8a8a;
+  background-color: #8a8a8a;
+  border-radius: 10px;
+  background:-webkit-linear-gradient(left, #fff 0%, #fff var(--progress), #8a8a8a var(--progress), #8a8a8a 100%);
+}
+
+.volume-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .weather {
