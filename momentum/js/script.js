@@ -732,6 +732,62 @@ function changeLanguage(){
     }
 }
 
+//________________________________________________________ TODO________________________________________________
+const todoBtn = document.querySelector('.todo');
+const todo = document.querySelector('.todo-content');
+const todoHeader = document.querySelector('.todo-header');
+const todoList = document.querySelector('.todo-list');
+const todoMain = document.querySelector('.todo-main');
+const todoInput = document.querySelector('.todo-input');
+
+function showTodo(){
+    if(todo.classList.contains('_active')){
+        todo.classList.remove('_active');
+    }else{
+        todo.classList.add('_active');
+    }
+}
+
+document.addEventListener('click', function(event){
+    const isTodo = event.target == todo || todo.contains(event.target) || event.target == todoBtn;
+    if(!isTodo){
+        todo.classList.remove('_active')
+    }
+})
+
+todoBtn.addEventListener('click', showTodo);
+
+function showList(){
+    if(todoList.classList.contains('_active')){
+        todoList.classList.remove('_active');
+    }else{
+        todoList.classList.add('_active');
+    }
+    setHeightTodo();
+}
+
+todoHeader.addEventListener('click', function(event){
+    if(event.target == todoHeader || todoHeader.contains(event.target)){
+        console.log(event.target)
+        showList();
+    }
+});
+
+document.addEventListener('click', function(event){
+    const isList = event.target == todoList || todoList.contains(event.target) || event.target == todoHeader || todoHeader.contains(event.target);
+    if(!isList){
+        todoList.classList.remove('_active')
+        setHeightTodo();
+    }
+})
+
+function setHeightTodo(){
+    if(todoList.classList.contains('_active')){
+        todoMain.style.minHeight = `${todoList.offsetHeight + todoInput.offsetHeight + 10}px`;
+    }else{
+        todoMain.style.minHeight = '0px';
+    }
+}
 
 // ____________________________________________________LOCAL_STORAGE____________________________________________
 

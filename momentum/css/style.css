@@ -411,7 +411,7 @@ body {
 .setting._active + .setting-content {
   visibility: visible;
   opacity: 1;
-  transition: all ease-in 0.1s;
+  transition: all ease-in 0.2s;
 }
 
 .setting-title {
@@ -571,6 +571,159 @@ body {
   min-height: 20px;
 }
 
+/*_________________________________________________ TODO___________________________________________ */
+.todo {
+  align-self: flex-end;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.todo:hover {
+  opacity: 1;
+} 
+
+.todo-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+  bottom: 60px;
+  max-height: 600px;
+  width: 300px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+
+  transition: all ease 0.2s;
+}
+
+.todo-content._active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.todo-header {
+  text-align: left;
+  cursor: pointer;
+  height: 25px
+}
+
+.todo-active-list {
+  position: relative;
+  display: inline-block;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.todo-button {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -40%);
+  right: -30px;
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+}
+
+.todo-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background-image: url('../assets/svg/arrow.svg');
+  transition: all ease 1s;
+  cursor: pointer;
+}
+
+.todo-header:hover > .todo-active-list > .todo-button{
+  background-color: rgb(48, 47, 47, 0.8);
+}
+
+.todo-list {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  position: relative;
+  z-index: 22;
+  padding: 10px 0;
+  margin: 20px 20px 20px 0;
+  color: #c7c7c7;
+  font-size: 15px;
+  background-color: #242424;
+  border-radius: 5px;
+}
+
+.todo-list._active {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+}
+
+.list-items {
+  list-style: none;
+}
+
+.list-item {
+  padding: 10px;
+}
+
+.list-item:hover {
+  background-color: #383838;
+}
+
+.todo-main {
+  text-align: left;
+  padding: 20px 0;
+}
+
+.todo-tasks {
+  display: none;
+}
+
+div[data-task=today] {
+  display: block;
+}
+
+.todo-task {
+  display: flex;
+  margin: 0 0 15px 0;
+}
+
+.todo-task:last-child {
+  margin: 0;
+}
+
+.task-input:checked + .task-name {
+  text-decoration: line-through;
+}
+
+.task-name {
+  margin: 0 0 0 10px;
+}
+
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+  color: #fff;
+  background-color: transparent;
+}
+
+.todo-input {
+  font-size: 16px;
+}
+
+.list-input {
+  font-size: 14px;
+  padding: 10px 10px 0 10px;
+}
+
+
+
 @media (max-width: 768px) {
   .time {
     min-height: 80px;
@@ -589,5 +742,80 @@ body {
   .name {
     font-size: 32px;
     padding: 5px;
+  }
+
+  .quote-text {
+    margin-bottom: 15px;
+    line-height: 30px;
+  }
+}
+
+@media (max-width: 550px) {
+  .time {
+    min-height: 65px;
+    font-size: 56px;    
+  }
+  
+  .greeting {
+    min-height: 30px;
+    font-size: 24px;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .date {
+    font-size: 20px;
+    min-height: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .quote {
+    font-size: 14px;
+    min-height: 18px;
+    /* width: 300px; */
+  }
+  
+  .quote-text {
+    margin-bottom: 15px;
+    line-height: 24px;
+  }
+  
+  .player-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .player {
+    width: 180px;
+  }
+
+  .play-item {
+    font-size: 14px;
+  }
+
+  .player-buttons {
+    margin-bottom: 10px;
+  }
+
+  .song-name {
+    font-size: 14px;
+  }
+
+  .player-time {
+    font-size: 14px;
+    min-height: 18px;
+  }
+
+  .weather {
+    width: 150px;
+    font-size: 14px;
+    min-height: 18px;
+  }
+
+  .city {
+    font-size: 18px;
+    min-height: 22px;
   }
 }
