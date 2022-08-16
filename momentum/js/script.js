@@ -8,7 +8,7 @@ let state = {
         'greeting': true,
         'weather': true,
         'player': true,
-        // 'todo': true,
+        'todo': true,
     }
 }
 
@@ -433,7 +433,6 @@ function setVolume(){
     audio.volume = (volumeRange.value / 100);
     progressRange();
     changeIconVolume();
-    console.log(audio.volume);
 }
 
 volumeRange.addEventListener('input', setVolume);
@@ -481,7 +480,7 @@ async function getWeather(){
     }
 }
 
-getWeather();
+await getWeather();
 
 // ___________________________________________________QUOTES____________________________________________________
 
@@ -607,8 +606,8 @@ setting.addEventListener('click', function(event){
 
 
 function setSettings(){
-    if(localStorage.getItem(state)){
-        state = JSON.parse(localStorage.getItem(state));
+    if(localStorage.getItem('state')){
+        state = JSON.parse(localStorage.getItem('state'));
     }
     
     let listItemSource = document.querySelectorAll('.list-source .line-item');
@@ -733,12 +732,21 @@ function changeLanguage(){
 }
 
 //________________________________________________________ TODO________________________________________________
+let sheets = {
+    'Inbox': [],
+    'Today': [],
+    'Done': [],
+}
+
 const todoBtn = document.querySelector('.todo');
 const todo = document.querySelector('.todo-content');
 const todoHeader = document.querySelector('.todo-header');
 const todoList = document.querySelector('.todo-list');
 const todoMain = document.querySelector('.todo-main');
+const todoSheets = Array.from(document.querySelectorAll('.todo-sheet'));
 const todoInput = document.querySelector('.todo-input');
+const listItems = document.querySelector('.list-items')
+
 
 function showTodo(){
     if(todo.classList.contains('_active')){
@@ -749,9 +757,10 @@ function showTodo(){
 }
 
 document.addEventListener('click', function(event){
-    const isTodo = event.target == todo || todo.contains(event.target) || event.target == todoBtn;
+    const isTodo = event.target == todo || todo.contains(event.target) || event.target == todoBtn 
+                    || event.target.classList.contains('task-setting-item') || event.target.classList.contains('list-item-delete');
     if(!isTodo){
-        todo.classList.remove('_active')
+        todo.classList.remove('_active');
     }
 })
 
@@ -767,8 +776,7 @@ function showList(){
 }
 
 todoHeader.addEventListener('click', function(event){
-    if(event.target == todoHeader || todoHeader.contains(event.target)){
-        console.log(event.target)
+    if((event.target == todoHeader || todoHeader.contains(event.target)) && event.target !== todoList && !todoList.contains(event.target)){
         showList();
     }
 });
@@ -789,19 +797,297 @@ function setHeightTodo(){
     }
 }
 
+let activeSheet = 'Today';
+const activeSheetName = document.querySelector('.todo-active-name');
+
+if(localStorage.getItem('activeSheet')){
+    activeSheet = localStorage.getItem('activeSheet');
+    setActiveSheet(activeSheet);
+}
+
+function setActiveSheet(nameSheet){
+    activeSheetName.textContent = nameSheet;
+    activeSheet = nameSheet;
+    for(let item of todoSheets){
+        if(item.dataset.sheet == nameSheet) {
+            item.classList.add('_active');
+        }else{
+            item.classList.remove('_active')
+        }
+    }
+}
+
+function deleteSheet(nameSheet){
+    for(let item of todoSheets){
+        if(item.dataset.sheet == nameSheet){
+            item.remove();
+        }
+    }
+    if(activeSheet == nameSheet){
+        setActiveSheet('Today');
+    }
+
+    delete sheets[nameSheet];
+}
+
+listItems.addEventListener('click', function(event){
+    if(event.target.classList.contains('list-item-delete')){
+        event.target.parentElement.remove();
+        deleteSheet(event.target.previousElementSibling.textContent);
+    }else{
+        setActiveSheet(event.target.textContent);
+        showList();
+    }
+})
+
+
+function createTask(nameTask){
+    const newTask = document.createElement('div');
+    newTask.classList.add('todo-task');
+    
+    const newCheckbox = document.createElement('input');
+    newCheckbox.classList.add('task-input');
+    newCheckbox.type = 'checkbox';
+    newTask.append(newCheckbox);
+
+    const newTaskName = document.createElement('input');
+    newTaskName.classList.add('task-name')
+    newTaskName.value = nameTask;
+    newTaskName.disabled = true;
+    newTask.append(newTaskName);
+    newTask.append(createTaskSetting());
+    newTask.append(createTaskSettingList());
+
+
+    return newTask;
+}
+
+function saveTask(nameTask = todoInput.value){
+    sheets[activeSheet].push(nameTask);
+}
+
+function createTaskSetting(){
+    const newTaskSetting = document.createElement('div');
+    newTaskSetting.classList.add('task-setting');
+
+    const newTaskSettingIconWrapper = document.createElement('div');
+    newTaskSettingIconWrapper.classList.add('task-setting-icon-wrapper');
+    newTaskSetting.append(newTaskSettingIconWrapper);
+
+    const newTaskSettingIcon = document.createElement('div');
+    newTaskSettingIcon.classList.add('task-setting-icon');
+    newTaskSettingIconWrapper.append(newTaskSettingIcon);
+
+    return newTaskSetting;
+}
+
+function createTaskSettingList(){
+    const newTaskSettingList = document.createElement('div');
+    newTaskSettingList.classList.add('task-setting-list');
+
+    for(let i = 0; i < 3; i++){
+        const newTaskSettingItem = document.createElement('div');
+        newTaskSettingItem.classList.add('task-setting-item');
+        newTaskSettingList.append(newTaskSettingItem);
+        if(i == 0){
+            newTaskSettingItem.textContent = 'Edit';
+        }
+        if(i == 1){
+            newTaskSettingItem.textContent = 'Move to Inbox';
+        }
+        if(i == 2){
+            newTaskSettingItem.textContent = 'Delete';
+        }
+    }
+
+    return newTaskSettingList;
+}
+
+const tasksSetting = Array.from(document.querySelectorAll('.task-setting-list'));
+
+function addTaskInActiveSheet(nameTask = todoInput.value, sheet = activeSheet){
+    for(let item of todoSheets){
+        if(item.dataset.sheet == sheet) {
+            const newTask = createTask(nameTask);
+            tasksSetting.push(newTask.lastElementChild);
+            item.append(newTask);
+        }
+    }
+
+    setActiveSheet(activeSheet);
+}
+
+todoInput.addEventListener('change', function(){
+    addTaskInActiveSheet();
+    saveTask();
+    todoInput.value = '';
+});
+
+const listInput = document.querySelector('.list-input');
+
+function createNewSheet(nameSheet = listInput.value){
+    const newListItem = document.createElement('li');
+    newListItem.classList.add('list-item');
+
+    const newListItemName = document.createElement('div');
+    newListItemName.classList.add('list-item-name');
+    newListItemName.textContent = nameSheet;
+    newListItem.append(newListItemName);
+
+    const newListItemDelete = document.createElement('div');
+    newListItemDelete.classList.add('list-item-delete');
+    newListItem.append(newListItemDelete);
+
+    listItems.append(newListItem);
+    
+    const newSheet = document.createElement('div');
+    newSheet.classList.add('todo-sheet');
+    newSheet.dataset.sheet = nameSheet;
+    
+
+    todoMain.append(newSheet);
+
+    todoSheets.push(newSheet);
+}
+
+function saveSheet(nameSheet = listInput.value){
+    sheets[nameSheet] = [];
+}
+
+
+listInput.addEventListener('change', function(){
+    createNewSheet();
+    activeSheet = listInput.value;
+    setActiveSheet(activeSheet);
+    showList();
+    saveSheet();
+    listInput.value = '';
+});
+
+
+function showTaskSetting(elem){
+    
+    for(let item of tasksSetting){
+        if(item !== elem){
+            item.classList.remove('_active');
+            item.parentElement.style.minHeight = `0px`;
+        }
+    }
+    if(elem.classList.contains('_active')){
+        elem.classList.remove('_active');
+        elem.parentElement.style.minHeight = `0px`;
+    }else{
+        elem.classList.add('_active');
+        elem.parentElement.style.minHeight = `${elem.offsetHeight}px`;
+    }
+}
+
+todoMain.addEventListener('click', function(event){
+    if(event.target.classList.contains('task-setting')){
+        showTaskSetting(event.target.nextElementSibling);
+    }
+    
+})
+
+todo.addEventListener('click', function(event){
+    if(!event.target.classList.contains('task-setting')){
+        for(let item of tasksSetting){
+            item.classList.remove('_active');
+            item.parentElement.style.minHeight = `0px`;
+        }
+    }
+})
+
+function editTask(task){
+    const input = task.querySelector('.task-name');
+    console.log(input.value);
+    const indexTask = sheets[activeSheet].findIndex(elem => elem == input.value);
+    
+    input.disabled = false;
+    input.focus();
+    input.addEventListener('change', function(){
+        input.disabled = true; 
+        sheets[activeSheet][indexTask] = input.value;
+    })
+}
+
+function moveTask(task, sheet){
+    let oldSheet = task.parentElement;
+    oldSheet.removeChild(task);
+
+    const taskName = task.querySelector('.task-name').value;
+    const indexTask = sheets[activeSheet].findIndex(elem => elem == taskName);
+    sheets[activeSheet].splice(indexTask, 1);
+
+    const newSheet = document.querySelector(`div[data-sheet="${sheet}"]`);
+    newSheet.append(task);
+
+    sheets[sheet].push(taskName);
+}
+
+function deleteTask(task){
+    const taskName = task.querySelector('.task-name').value;
+    const indexTask = sheets[activeSheet].findIndex(elem => elem == taskName);
+    sheets[activeSheet].splice(indexTask, 1);
+    task.remove();
+}
+
+todoMain.addEventListener('click', function(event){
+    if(event.target.classList.contains('task-input')){
+        let task = event.target.parentElement;
+        if(event.target.checked){
+            moveTask(task, 'Done');
+        }else{
+            moveTask(task, 'Inbox');
+        }
+    }
+    if(event.target.classList.contains('task-setting-item')){
+        let task = event.target.parentElement.parentElement;
+        if(event.target.textContent == 'Edit'){
+            editTask(task);
+        }
+        if(event.target.textContent == 'Move to Inbox'){
+            moveTask(task, 'Inbox');
+        }
+        if(event.target.textContent == 'Delete'){
+            deleteTask(task);
+        }
+    }
+})
+
+function setTodo(){
+    if(localStorage.getItem('sheets')){
+        sheets = JSON.parse(localStorage.getItem('sheets'));
+    }
+    for(let sheet in sheets){
+        if(sheet !== 'Today' && sheet !== 'Done' && sheet !== 'Inbox'){
+            createNewSheet(sheet);
+        }
+        for(let task of sheets[sheet]){
+                // console.log(task + ' ')
+            addTaskInActiveSheet(task, sheet);
+        }
+    }
+}
+
+setTodo();
+
 // ____________________________________________________LOCAL_STORAGE____________________________________________
 
 function setLocalStorage(){
     localStorage.setItem('name', n.value);
     localStorage.setItem('city', city.value);
-    localStorage.setItem(state, JSON.stringify(state));
+    localStorage.setItem('state', JSON.stringify(state));
     localStorage.setItem('tags', tagsValue);
+    localStorage.setItem('sheets', JSON.stringify(sheets));
+    localStorage.setItem('activeSheet', activeSheet);
 }
 window.addEventListener('beforeunload', setLocalStorage);
 
 function getLocalStorage() {
     if(localStorage.getItem('name')) {
-      n.value = localStorage.getItem('name');
+        n.value = localStorage.getItem('name');
     }
+   
   }
-  window.addEventListener('load', getLocalStorage)
+window.addEventListener('load', getLocalStorage)

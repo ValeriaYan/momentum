@@ -52,7 +52,7 @@
       <button class="slide-prev slider-icon"></button>
       <button class="slide-next slider-icon"></button>
     </div>
-    <time class="time"></time>
+    <div class="time"></div>
     <date class="date"></date>
     <div class="greeting">
       <span class="greeting-text"></span>
@@ -92,73 +92,66 @@
       </div>
       <div class="line">
         <div class="line-name">Photo source</div>
-        <div class="line-list line-list-4 list-source">
+        <ul class="line-list line-list-4 list-source">
           <li class="line-item default">GitHub</li>
           <li class="line-item">GitHub</li>
           <li class="line-item">Flickr API</li>
           <li class="line-item">Unsplash API</li>
-        </div>
+        </ul>
       </div>
       <div class="line">
         <div class="line-name">Tags</div>
         <input type="text" class="line-tags" value="">
       </div>
       <label class="line">
-        <div class="line-name">Time</div>
+        <span class="line-name">Time</span>
         <input type="checkbox" class="line-input" name="time" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
       <label class="line">
-        <div class="line-name">Date</div>
-        <input type="checkbox" class="line-input" name="date"checked>
+        <span class="line-name">Date</span>
+        <input type="checkbox" class="line-input" name="date" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
       <label class="line">
-        <div class="line-name">Greeting</div>
-        <input type="checkbox" class="line-input" name="greeting"checked>
+        <span class="line-name">Greeting</span>
+        <input type="checkbox" class="line-input" name="greeting" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
       <label class="line">
-        <div class="line-name">Quote</div>
-        <input type="checkbox" class="line-input" name="quote"checked>
+        <span class="line-name">Quote</span>
+        <input type="checkbox" class="line-input" name="quote" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
       <label class="line">
-        <div class="line-name">Weather</div>
-        <input type="checkbox" class="line-input" name="weather"checked>
+        <span class="line-name">Weather</span>
+        <input type="checkbox" class="line-input" name="weather" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
       <label class="line">
-        <div class="line-name">Audio</div>
+        <span class="line-name">Audio</span>
         <input type="checkbox" class="line-input" name="player" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
       </label>
-      <!-- <label class="line">
-        ToDo
+      <label class="line">
+        <span class="line-name">ToDo</span>
         <input type="checkbox" class="line-input" name="todo" checked>
           <span class="line-box">
             <i></i>
           </span>
-        </input">
-      </label> -->
+      </label>
     </div>
     <div class="setting-error"></div>
     <div class="quote">
@@ -178,35 +171,18 @@
         <div class="todo-list">
           <ul class="list-items">
             <li class="list-item">Inbox</li>
-            <li class="list-item _acive">Today</li>
+            <li class="list-item">Today</li>
             <li class="list-item">Done</li>
           </ul>
-          <input class="list-input input" type="text" placeholder="+ New List"></input>
+          <input class="list-input input" type="text" placeholder="+ New List">
         </div>
       </div>
       <div class="todo-main">
-        <div class="todo-tasks" data-task="today">
-          <label class="todo-task">
-            <input class="task-input" type="checkbox" name="" id="">
-            <div class="task-name">Task</div>
-          </label>
-          <label class="todo-task">
-            <input class="task-input" type="checkbox" name="" id="">
-            <div class="task-name">Task</div>
-          </label>
-        </div>
-        <div class="todo-tasks" data-task="inbox">
-          <label class="todo-task">
-            <input class="task-input" type="checkbox" name="" id="">
-            <div class="task-name">Task</div>
-          </label>
-          <label class="todo-task">
-            <input class="task-input" type="checkbox" name="" id="">
-            <div class="task-name">Task</div>
-          </label>
-        </div>
+        <div class="todo-sheet" data-sheet="Today"></div>
+        <div class="todo-sheet" data-sheet="Inbox"></div>
+        <div class="todo-sheet" data-sheet="Done"></div>
       </div>
-      <input class="todo-input input" type="text" placeholder="New Todo"></input>
+      <input class="todo-input input" type="text" placeholder="New Todo" value="">
     </div>
   </footer>
   <script type="module" src="./js/script.js"></script>

@@ -398,12 +398,12 @@ body {
 
   transition: all ease-in 0.1s;
 }
-.setting-content::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 5px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: transparent;
 }
 
-.setting-content::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: rgb(65, 65, 65);
   border-radius: 10px;
 }
@@ -428,6 +428,7 @@ body {
 }
 
 .line-name {
+  display: block;
 }
 
 .line-list {
@@ -586,11 +587,12 @@ body {
   visibility: hidden;
   opacity: 0;
   position: absolute;
+  z-index: 1;
   right: 10px;
   bottom: 60px;
   max-height: 600px;
   width: 300px;
-  padding: 20px;
+  padding: 20px 0 20px 20px;
   background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
 
@@ -605,7 +607,7 @@ body {
 .todo-header {
   text-align: left;
   cursor: pointer;
-  height: 25px
+  /* height: 25px; */
 }
 
 .todo-active-list {
@@ -613,6 +615,11 @@ body {
   display: inline-block;
   font-size: 20px;
   line-height: 24px;
+}
+
+.todo-active-name {
+  max-width: 200px;
+  word-wrap: break-word;
 }
 
 .todo-button {
@@ -643,36 +650,83 @@ body {
   background-color: rgb(48, 47, 47, 0.8);
 }
 
-.todo-list {
-  visibility: hidden;
-  opacity: 0;
-  height: 0;
-  position: relative;
+
+.todo-list{
+  display: none;
+ 
+  position: absolute;
   z-index: 22;
+  max-width: 250px;
   padding: 10px 0;
   margin: 20px 20px 20px 0;
+
   color: #c7c7c7;
-  font-size: 15px;
   background-color: #242424;
   border-radius: 5px;
+  font-size: 15px;
 }
 
+
 .todo-list._active {
-  visibility: visible;
-  opacity: 1;
-  height: auto;
+  display: block;
+}
+
+.todo-list._active > .list-items {
+  display: block;
 }
 
 .list-items {
   list-style: none;
+  max-height: 400px;
+  width: 100%;
+  overflow-y: scroll;
 }
 
 .list-item {
   padding: 10px;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .list-item:hover {
   background-color: #383838;
+}
+
+.list-item-name {
+  padding-right: 5px;
+  word-wrap: break-word;
+  overflow-x: hidden;
+}
+
+.list-item-delete {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.list-item-delete::before,
+.list-item-delete::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 1px;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 3px;
+  transform: translate(-50%, 0);
+  background-color: #8a8a8a;
+  transform: rotate(45deg);
+}
+
+.list-item-delete::after {
+  transform: rotate(-45deg);
+}
+
+.list-item-delete:hover {
+  background-color: rgb(36, 36, 36);
 }
 
 .todo-main {
@@ -680,17 +734,29 @@ body {
   padding: 20px 0;
 }
 
-.todo-tasks {
+.todo-sheet {
   display: none;
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 20px 0 0;
 }
 
-div[data-task=today] {
+.todo-sheet._active {
   display: block;
 }
 
 .todo-task {
   display: flex;
-  margin: 0 0 15px 0;
+  align-items: center;
+  position: relative;
+  padding: 10px 0;
+  min-height: auto;
+  transition: all ease 0.2s;
+}
+
+.todo-task:hover > .task-setting > .task-setting-icon-wrapper{
+  visibility: visible;
 }
 
 .todo-task:last-child {
@@ -703,7 +769,99 @@ div[data-task=today] {
 
 .task-name {
   margin: 0 0 0 10px;
+  width: 100%;
+  word-wrap: break-word;
+  padding: 0 10px 0 0;
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  outline: none;
 }
+
+.task-setting {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.task-setting:hover {
+  background-color: #383838;
+  border-radius: 50%;
+}
+
+.task-setting-icon-wrapper {
+  visibility: hidden;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+
+}
+
+
+.task-setting-icon {
+  position: relative;
+  margin: 0;
+  opacity: 0.6;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 45%;
+  pointer-events: none;
+}
+
+.task-setting-icon,
+.task-setting-icon::before,
+.task-setting-icon::after{
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.task-setting-icon::before,
+.task-setting-icon::after{
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: -5px;
+}
+
+.task-setting-icon::after {
+  left: 5px;
+}
+
+.task-setting-list {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  right: 30px;
+  color: #c7c7c7;
+  background-color: #242424;
+  border-radius: 5px;
+  padding: 10px 0;
+  font-size: 14px;
+  line-height: 25px;
+}
+
+.task-setting-list._active {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+}
+
+.task-setting-item {
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.task-setting-item:hover {
+  background-color: #383838;
+}
+
+
 
 .input {
   width: 100%;
