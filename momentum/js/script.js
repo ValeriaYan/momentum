@@ -237,7 +237,7 @@ async function getLinkToImageFlickr(){
 
 // ________________________________________PLAYER____________________________________________
 
-import playList from './playList.js';
+import playList from '../js/playList.js';
 const playBtn = document.querySelector('.play');
 const next = document.querySelector('.play-next');
 const prev = document.querySelector('.play-prev');
