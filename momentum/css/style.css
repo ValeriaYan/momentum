@@ -397,6 +397,7 @@ body {
   background-color: rgba(0, 0, 0, 0.8);
 
   transition: all ease-in 0.1s;
+  z-index: 99;
 }
 ::-webkit-scrollbar {
   width: 5px;
@@ -495,6 +496,7 @@ body {
   font-size: 16px;
   background-color: rgba(255, 255, 255, 0.2);
   color: #fff;
+  margin-left: 10px;
 }
 
 .line-input {
