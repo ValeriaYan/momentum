@@ -452,6 +452,7 @@ if(localStorage.getItem('city')){
 }else{
     city.value = 'Minsk';
 }
+
 const weatherError = document.querySelector('.weather-error');
 
 city.addEventListener('change', getWeather);
@@ -654,9 +655,15 @@ function setLanguageWeather(data){
     if(state.language == 'en'){
         wind.textContent = `Wind speed: ${Math.floor(data.wind.speed)} m/s`;
         humidity.textContent = `Humidity: ${data.main.humidity}%`;
+        if(city.value == 'Минск'){
+            city.value = 'Minsk';
+        }
     }else if(state.language == 'ru'){
         wind.textContent = `Скорость ветра: ${Math.floor(data.wind.speed)} m/s`;
         humidity.textContent = `Влажность воздуха: ${data.main.humidity}%`;
+        if(city.value == 'Minsk'){
+            city.value = 'Минск';
+        }
     }
 }
 
@@ -911,6 +918,10 @@ function addTaskInActiveSheet(nameTask = todoInput.value, sheet = activeSheet){
             const newTask = createTask(nameTask);
             tasksSetting.push(newTask.lastElementChild);
             item.append(newTask);
+
+            if(sheet == 'Done'){
+                newTask.querySelector('.task-input').checked = true;
+            }
         }
     }
 
@@ -1064,7 +1075,6 @@ function setTodo(){
             createNewSheet(sheet);
         }
         for(let task of sheets[sheet]){
-                // console.log(task + ' ')
             addTaskInActiveSheet(task, sheet);
         }
     }
