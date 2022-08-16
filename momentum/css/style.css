@@ -10,7 +10,7 @@
 }
 
 body {
-  min-width: 480px;
+  min-width: 320px;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
   font-size: 16px;
@@ -932,7 +932,6 @@ body {
   .quote {
     font-size: 14px;
     min-height: 18px;
-    /* width: 300px; */
   }
   
   .quote-text {
@@ -977,3 +976,78 @@ body {
     min-height: 22px;
   }
 }
+
+@media (max-width: 400px) {
+  .header,
+  .main,
+  .footer{
+    padding: 10px;
+  }
+
+  .time {
+    min-height: 54px;
+    font-size: 48px;    
+  }
+  
+  .greeting {
+    
+    flex-direction: column;
+  }
+
+  .name {
+    text-align: center;
+  }
+
+  .date {
+    font-size: 18px;
+    min-height: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .quote {
+    font-size: 14px;
+    min-height: 18px;
+  }
+  
+  .player {
+    
+  }
+  
+  .player {
+    width: 160px;
+  }
+
+  .play-item {
+    font-size: 12px;
+  }
+
+  .song-name {
+    font-size: 12px;
+  }
+
+  .player-time {
+    font-size: 12px;
+    min-height: 14px;
+  }
+
+  .weather {
+    width: 100px;
+    font-size: 12px;
+    min-height: 14px;
+  }
+
+  .city {
+    width: 110px;
+    font-size: 14px;
+    min-height: 18px;
+  }
+
+  .temperature,
+  .weather-description,
+  .wind {
+    margin-bottom: 10px;
+  }
+
+  
+}
+
