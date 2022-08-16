@@ -127,6 +127,7 @@ function disableTags(){
     tags.disabled = true;
     tags.previousElementSibling.style.color = `rgb(82, 82, 82)`;
     tags.value = '';
+    tagsValue = tags.value;
 }
 
 function enableTags(){
