@@ -572,6 +572,9 @@ function showHideBlocks(){
             if(state.blocks[nameBlock] == false){
                 block.style.visibility = 'hidden';
                 block.style.opacity = '0';
+                if(nameBlock == 'player') {
+                    playAudio();
+                }
             }
             if(state.blocks[nameBlock] == true){
                 block.style.visibility = 'visible';
