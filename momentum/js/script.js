@@ -572,7 +572,7 @@ function showHideBlocks(){
             if(state.blocks[nameBlock] == false){
                 block.style.visibility = 'hidden';
                 block.style.opacity = '0';
-                if(nameBlock == 'player') {
+                if(nameBlock == 'player' && isPlay == true) {
                     playAudio();
                 }
             }
